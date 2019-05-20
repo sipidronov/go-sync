@@ -5,8 +5,16 @@ Simple client &amp; server implementation for syncing file changes between hosts
 * zmq (because I like zmq)
 * fsnotify
 
+MacOS:
 ```
 brew install zeromq
+```
+CentOS:
+```
+yum install zeromq zeromq-devel
+```
+Go dependencies:
+```
 go get "github.com/howeyc/fsnotify"
 go get "github.com/pebbe/zmq4"
 ```
