@@ -22,7 +22,11 @@ func NewSyncWriter(dir string) (SyncWriter, error) {
 
 func (w FileWriter) ensureExist(filename string) {
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		os.Create(filename)
+		f, err := os.Create(filename)
+		if err != nil {
+			fmt.Println("Failed to create file: ", err)
+		}
+		f.Close()
 	}
 }
 
@@ -47,8 +51,7 @@ func (w FileWriter) Sync(msg *message.SyncMessage, buf *bytes.Buffer) error {
 
 		fmt.Println("Truncated: ", fullPath, " to size: ", msg.Offset)
 	case message.FileChunk:
-		w.ensureExist(fullPath)
-		f, err := os.OpenFile(fullPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+		f, err := os.OpenFile(fullPath, os.O_RDWR|os.O_CREATE, 0666)
 		defer f.Close()
 		if err != nil {
 			fmt.Println("OpenFile failed: ", err)
